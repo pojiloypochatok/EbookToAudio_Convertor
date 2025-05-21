@@ -20,7 +20,7 @@ model.to(device)
 
 
 # Создание ssml из текста
-def generate_ssml(text, pitch="low", rate="slow", strength="strong", volume=None):
+def generate_ssml(text, pitch="low", rate="very-slow", strength="strong", volume=None):
     prosody_attrs = f'pitch="{pitch}" rate="{rate}" strength="{strength}"'
     if volume:
         prosody_attrs += f' volume="{volume}"'
@@ -38,12 +38,12 @@ def split_text_by_length(text, max_len=800):
 
 
 # Озвучка + склейка
-def synthesize_and_merge(text, temp_path):
+def synthesize_and_merge(text, absol_temp_path):
     chunks = split_text_by_length(text)
     temp_files = []
 
     for idx, chunk in enumerate(chunks):
-        temp_path = f"{temp_files}/chunk_{idx}.wav"
+        temp_path = f"{absol_temp_path}/chunk_{idx}.wav"
         model.save_wav(text=chunk,
                        speaker=speaker,
                        sample_rate=sample_rate,
@@ -53,16 +53,19 @@ def synthesize_and_merge(text, temp_path):
     final_audio = AudioSegment.empty()
     for path in temp_files:
         final_audio += AudioSegment.from_wav(path)
+
+    for path in temp_files:
         os.remove(path)
+
     return final_audio
 
 
 def generate_text(text, output_path, temp_path):
     try:
         result = synthesize_and_merge(text, temp_path)
-        result.export(output_path)
+        result.export(output_path, format="wav")
     finally:
-        return f"Аудиофайл успешно сгенерирован и находится в {output_path}"
+        print(f"Аудиофайл успешно сгенерирован и находится в {output_path}")
 
 
 
