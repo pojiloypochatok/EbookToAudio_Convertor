@@ -12,9 +12,9 @@ def read_file(input_file):
         return content, filename
 
 
-class BookManager:
-    def __init__(self, temp_path: str, output_path: str, input_path: str):
-        self.temp_path = temp_path
+class EbookToAudio:
+    def __init__(self, output_path: str = "../output", input_path: str = "../input"):
+        self.temp_path = "../temp"
         self.output_path = output_path
         self.input_path = input_path
 
@@ -42,9 +42,3 @@ class BookManager:
             self.temp_path
         )
 
-
-ebooktoaudio = BookManager(
-    output_path="../output",
-    temp_path="../temp",
-    input_path="../input"
-)
