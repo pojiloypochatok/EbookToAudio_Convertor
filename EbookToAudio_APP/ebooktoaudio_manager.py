@@ -1,7 +1,8 @@
 from torch.cuda.tunable import read_file  # если используешь read_file из torch
-from EbookToAudio_APP.utils.V2.extract_characters import split_into_chapters
-from EbookToAudio_APP.utils.V2.tts_engine_V2 import generate_text
+from utils.V2.extract_characters import split_into_chapters
+from utils.V2.tts_engine_V2 import generate_text
 import os
+from pathlib import Path
 
 
 def read_file(input_file):
@@ -13,10 +14,11 @@ def read_file(input_file):
 
 
 class EbookToAudio:
-    def __init__(self, output_path: str = "../output", input_path: str = "../input"):
-        self.temp_path = "../temp"
-        self.output_path = output_path
-        self.input_path = input_path
+    def __init__(self, output_path: str = "output", input_path: str = "input"):
+        self.BASE_DIR = Path(__file__).resolve().parent.parent
+        self.temp_path = self.BASE_DIR / "temp"
+        self.output_path = self.BASE_DIR / output_path
+        self.input_path = self.BASE_DIR / input_path
 
     def generate_with_characters(self, unsplit_text):
         if unsplit_text is not str:
@@ -32,10 +34,11 @@ class EbookToAudio:
             )
 
     def generate_without_characters(self, input_text):
-        if input_text is not str:
+        if not isinstance(input_text, str):
             input_text, file_name = read_file(input_text)
             print(input_text, file_name)
-
+        else:
+            file_name = "untitled"
         generate_text(
             input_text,
             f"{self.output_path}/{file_name}.wav",
