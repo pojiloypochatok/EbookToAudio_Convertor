@@ -1,6 +1,6 @@
 from torch.cuda.tunable import read_file  # если используешь read_file из torch
-from utils.V2.extract_characters import split_into_chapters
-from utils.V2.tts_engine_V2 import generate_text
+from EbookToAudio_Convertor.EbookToAudio_APP.utils.V2.extract_characters import split_into_chapters
+from EbookToAudio_Convertor.EbookToAudio_APP.utils.V2.tts_engine_V2 import generate_text
 import os
 from pathlib import Path
 

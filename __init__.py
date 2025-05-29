@@ -1,3 +1,3 @@
-from EbookToAudio_APP import EbookToAudio
+from EbookToAudio_Convertor.EbookToAudio_APP import EbookToAudio
 
 __all__ = ["EbookToAudio"]
