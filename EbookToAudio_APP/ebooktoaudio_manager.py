@@ -21,10 +21,10 @@ class EbookToAudio:
         self.output_path = self.BASE_DIR / output_path
         self.input_path = self.BASE_DIR / input_path
 
-    def generate_with_characters(self, unsplit_text):
-        if unsplit_text is not str:
-            unsplit_text, file_name = read_file(unsplit_text)
-            print(unsplit_text, file_name)
+    def generate_with_characters(self, unsplit_text, file_name ="Untitled"):
+        if not isinstance(unsplit_text, str) and os.path.isfile(unsplit_text):
+            input_text, file_name = read_file(unsplit_text)
+            print(input_text, file_name)
 
         characters = split_into_chapters(unsplit_text)
         for idx, character in enumerate(characters):
@@ -34,22 +34,24 @@ class EbookToAudio:
                 self.temp_path
             )
 
-    def generate_without_characters(self, input_text):
-        if not isinstance(input_text, str):
+    def generate_without_characters(self, input_text, file_name="Untitled"):
+        if not isinstance(input_text, str) and os.path.isfile(input_text):
             input_text, file_name = read_file(input_text)
             print(input_text, file_name)
-        else:
-            file_name = "untitled"
         generate_text(
             input_text,
             f"{self.output_path}/{file_name}.wav",
             self.temp_path
         )
 
-    def auto_generate(self, input_text):
+    def auto_generate(self, input_text, filename="Untitled"):
+        if not isinstance(input_text, str) and os.path.isfile(input_text):
+            input_text, file_name = read_file(input_text)
+            print(input_text, file_name)
+
         if check_characters(input_text):
-            self.generate_with_characters(input_text)
+            self.generate_with_characters(input_text, filename)
         else:
-            self.generate_without_characters(input_text)
+            self.generate_without_characters(input_text, filename)
 
 
