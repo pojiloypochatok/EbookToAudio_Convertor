@@ -1,5 +1,6 @@
 from torch.cuda.tunable import read_file  # если используешь read_file из torch
 from EbookToAudio_Convertor.EbookToAudio_APP.utils.V2.extract_characters import split_into_chapters
+from EbookToAudio_Convertor.EbookToAudio_APP.utils.V2.check_for_characters import check_characters
 from EbookToAudio_Convertor.EbookToAudio_APP.utils.V2.tts_engine_V2 import generate_text
 import os
 from pathlib import Path
@@ -44,4 +45,11 @@ class EbookToAudio:
             f"{self.output_path}/{file_name}.wav",
             self.temp_path
         )
+
+    def auto_generate(self, input_text):
+        if check_characters(input_text):
+            self.generate_with_characters(input_text)
+        else:
+            self.generate_without_characters(input_text)
+
 
