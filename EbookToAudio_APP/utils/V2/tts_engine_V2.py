@@ -1,7 +1,7 @@
 import os
 import torch
 from pydub import AudioSegment
-import asyncio
+from .progress_tracker import ProgressTracker
 
 # Загрузка модели
 language = 'ru'
@@ -22,9 +22,6 @@ model.to(device)
 # Создание ssml из текста
 def generate_ssml(text, pitch="low", rate="very-slow", strength="strong", volume=None):
     prosody_attrs = f'pitch="{pitch}" rate="{rate}" strength="{strength}"'
-    if volume:
-        prosody_attrs += f' volume="{volume}"'
-
     ssml = f'<speak><prosody {prosody_attrs}>{text}</prosody></speak>'
     return ssml
 
@@ -37,9 +34,11 @@ def split_text_by_length(text, max_len=800):
     return chunks
 
 
-# Озвучка + склейка
-def synthesize_and_merge(text, absol_temp_path):
+# Озвучка и склейка
+def synthesize_and_merge(text, absol_temp_path, on_progress=None):
     chunks = split_text_by_length(text)
+    progress_idx = round(100 / len(chunks))
+    print(progress_idx)
     temp_files = []
 
     for idx, chunk in enumerate(chunks):
@@ -49,6 +48,8 @@ def synthesize_and_merge(text, absol_temp_path):
                        sample_rate=sample_rate,
                        audio_path=temp_path)
         temp_files.append(temp_path)
+        if on_progress:
+            on_progress(progress_idx)
 
     final_audio = AudioSegment.empty()
     for path in temp_files:
@@ -60,12 +61,28 @@ def synthesize_and_merge(text, absol_temp_path):
     return final_audio
 
 
-def generate_text(text, output_path, temp_path):
+# Основная функция
+def generate_text(text, output_path, temp_path, progress_tracker: ProgressTracker = None):
     try:
-        result = synthesize_and_merge(text, temp_path)
+        def on_progress(local_percent):
+            if progress_tracker:
+                global_percent = progress_tracker.get()
+                global_percent += local_percent
+                progress_tracker.set(global_percent)
+
+        result = synthesize_and_merge(text, temp_path, on_progress=on_progress)
         result.export(output_path, format="wav")
+        if progress_tracker:
+            progress_tracker.mark_done()
+
+    except Exception as e:
+        if progress_tracker:
+            progress_tracker.set_error(e)
+        raise
+
     finally:
         print(f"Аудиофайл успешно сгенерирован и находится в {output_path}")
+
 
 
 
