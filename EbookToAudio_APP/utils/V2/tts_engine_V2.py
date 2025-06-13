@@ -38,7 +38,6 @@ def split_text_by_length(text, max_len=800):
 def synthesize_and_merge(text, absol_temp_path, on_progress=None):
     chunks = split_text_by_length(text)
     progress_idx = round(100 / len(chunks))
-    print(progress_idx)
     temp_files = []
 
     for idx, chunk in enumerate(chunks):

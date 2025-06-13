@@ -27,7 +27,7 @@ class EbookToAudio:
         self.active_trackers[task_id] = tracker
         return tracker
 
-    def get_progress(self, task_id):
+    def get_progress(self, task_id="default"):
         tracker = self.active_trackers.get(task_id)
         if tracker:
             return tracker
