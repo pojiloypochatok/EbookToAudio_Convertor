@@ -1,2 +1,6 @@
-torch~=2.7.0
-pydub~=0.25.1
+torch
+pydub
+omegaconf
+Numpy
+audioop-lts
+scipy
