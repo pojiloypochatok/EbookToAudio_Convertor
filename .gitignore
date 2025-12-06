@@ -15,6 +15,15 @@ venv/
 .envrc
 .venv/
 
+# Models / artifacts
+EbookToAudio_Engine/utils/V2/v5_ru.pt*
+~/.ebooktoaudio/models/*
+.ebooktoaudio/
+
+# Outputs / temp
+output/*.wav
+temp/**
+
 # Byte-compiled / optimized / DLL files
 *.so
 *.dylib

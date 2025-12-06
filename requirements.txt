@@ -2,3 +2,5 @@ torch
 pydub
 omegaconf
 Numpy
+audioop-lts
+scipy

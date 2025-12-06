@@ -1,3 +1,3 @@
-from EbookToAudio_Convertor.EbookToAudio_APP import EbookToAudio
+from EbookToAudio_Convertor.EbookToAudio_Engine import EbookToAudio  # type: ignore
 
 __all__ = ["EbookToAudio"]
